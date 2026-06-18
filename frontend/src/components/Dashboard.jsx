@@ -503,12 +503,72 @@ export default function Dashboard({
               Today's plan <span className="arr">›</span>
             </button>
             <div className={`plan-body ${isPlanOpen ? 'open' : ''}`}>
-              {todayPlan.map((p, idx) => (
-                <div className="plan-row" key={idx}>
-                  <div className="plan-time">{p.time}</div>
-                  <div className="plan-desc">{p.desc}</div>
+              {topics.map((t) => {
+                const startStr = t.lastStart ? new Date(t.lastStart).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }) : '';
+                const endStr = t.lastEnd ? new Date(t.lastEnd).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }) : '';
+                let timeDisplay = '--:--';
+                if (startStr && endStr) {
+                  timeDisplay = `${startStr} – ${endStr}`;
+                } else if (startStr) {
+                  timeDisplay = `${startStr} →`;
+                } else if (endStr) {
+                  timeDisplay = `→ ${endStr}`;
+                }
+
+                return (
+                  <div
+                    className="plan-row"
+                    key={t.id}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      padding: '10px 16px',
+                      borderBottom: '1px solid var(--border)',
+                      background: t.running ? 'var(--indigo-light)' : 'transparent'
+                    }}
+                  >
+                    <div
+                      className="plan-time"
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: '700',
+                        color: t.running ? 'var(--indigo-mid)' : 'var(--indigo)',
+                        minWidth: '100px',
+                        fontSize: '12px'
+                      }}
+                    >
+                      {timeDisplay}
+                    </div>
+                    <div
+                      className="plan-desc"
+                      style={{
+                        textDecoration: t.completed ? 'line-through' : 'none',
+                        fontWeight: t.running ? '600' : '500',
+                        color: t.completed ? 'var(--text-soft)' : 'var(--text-muted)'
+                      }}
+                    >
+                      {t.name}
+                    </div>
+                    {t.running && (
+                      <span
+                        className="live-dot on"
+                        style={{
+                          width: '7px',
+                          height: '7px',
+                          marginLeft: 'auto',
+                          display: 'inline-block'
+                        }}
+                      ></span>
+                    )}
+                  </div>
+                );
+              })}
+              {topics.length === 0 && (
+                <div style={{ padding: '16px', color: 'var(--text-soft)', textAlign: 'center', fontSize: '12px' }}>
+                  No topics added yet.
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </aside>
