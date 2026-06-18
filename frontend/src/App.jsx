@@ -44,7 +44,7 @@ export default function App() {
       }
 
       try {
-        const res = await fetch('${API_URL}/api/auth/me', {
+        const res = await fetch(`${API_URL}/api/auth/me`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -72,7 +72,7 @@ export default function App() {
 
   const fetchTrackerData = async (authToken) => {
     try {
-      const res = await fetch('${API_URL}/api/tracker', {
+      const res = await fetch(`${API_URL}/api/tracker`, {
         headers: {
           'Authorization': `Bearer ${authToken}`
         }
@@ -120,7 +120,7 @@ export default function App() {
         return t;
       });
       // Try to save final state to server synchronously using beacon or simple fetch before cleaning up
-      fetch('${API_URL}/api/tracker', {
+      fetch(`${API_URL}/api/tracker`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -173,7 +173,7 @@ export default function App() {
     if (!token) return;
 
     try {
-      const res = await fetch('/api/tracker', {
+      const res = await fetch(`${API_URL}/api/tracker`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -256,7 +256,7 @@ export default function App() {
         });
 
         // Try standard fetch as backup
-        fetch('${API_URL}/api/tracker', {
+        fetch(`${API_URL}/api/tracker`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
