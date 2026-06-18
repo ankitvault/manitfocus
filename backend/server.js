@@ -17,17 +17,23 @@ app.use(express.json());
 app.use('/api', routes);
 
 // Serve static assets in production (if requested later)
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/dist')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
-  });
-} else {
-  // Simple health check route for API in dev
-  app.get('/', (req, res) => {
-    res.send('MANIT Focus Backend API is running...');
-  });
-}
+
+// if (process.env.NODE_ENV === 'production') {
+//   app.use(express.static(path.join(__dirname, '../frontend/dist')));
+//   app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+//   });
+// } else {
+//   // Simple health check route for API in dev
+//   app.get('/', (req, res) => {
+//     res.send('MANIT Focus Backend API is running...');
+//   });
+// }
+
+// Temporary route for backend deployment
+app.get('/', (req, res) => {
+  res.send('MANIT Focus Backend API is running...');
+});
 
 // Connect to MongoDB Database
 const mongodbUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/manitfocus';
