@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Login({ onLoginSuccess }) {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -14,12 +15,12 @@ export default function Login({ onLoginSuccess }) {
     setLoading(true);
 
     const endpoint = isRegistering ? '/api/auth/register' : '/api/auth/login';
-    const payload = isRegistering 
+    const payload = isRegistering
       ? { username, email, password }
       : { email, password };
 
     try {
-      const response = await fetch(endpoint, {
+      const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -47,8 +48,8 @@ export default function Login({ onLoginSuccess }) {
         <div className="auth-header">
           <div className="auth-logo">MANIT Focus</div>
           <div className="auth-subtitle">
-            {isRegistering 
-              ? 'Create your account to start tracking study hours' 
+            {isRegistering
+              ? 'Create your account to start tracking study hours'
               : 'Sign in to access your study study statistics'}
           </div>
         </div>
@@ -103,9 +104,9 @@ export default function Login({ onLoginSuccess }) {
           {isRegistering ? (
             <>
               Already have an account?{' '}
-              <a 
-                href="#login" 
-                className="auth-link" 
+              <a
+                href="#login"
+                className="auth-link"
                 onClick={(e) => {
                   e.preventDefault();
                   setIsRegistering(false);
@@ -118,9 +119,9 @@ export default function Login({ onLoginSuccess }) {
           ) : (
             <>
               New to MANIT Focus?{' '}
-              <a 
-                href="#register" 
-                className="auth-link" 
+              <a
+                href="#register"
+                className="auth-link"
                 onClick={(e) => {
                   e.preventDefault();
                   setIsRegistering(true);

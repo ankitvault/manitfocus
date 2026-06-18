@@ -1,6 +1,8 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -42,7 +44,7 @@ export default function App() {
       }
 
       try {
-        const res = await fetch('/api/auth/me', {
+        const res = await fetch('${API_URL}/api/auth/me', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -70,7 +72,7 @@ export default function App() {
 
   const fetchTrackerData = async (authToken) => {
     try {
-      const res = await fetch('/api/tracker', {
+      const res = await fetch('${API_URL}/api/tracker', {
         headers: {
           'Authorization': `Bearer ${authToken}`
         }
@@ -78,7 +80,7 @@ export default function App() {
       if (res.ok) {
         const data = await res.json();
         setGoalMinutes(data.goalMinutes || 660);
-        
+
         // Reset running status of topics loaded from DB to prevent visual glitch on reload
         const loadedTopics = (data.topics || []).map(t => ({
           ...t,
@@ -118,7 +120,7 @@ export default function App() {
         return t;
       });
       // Try to save final state to server synchronously using beacon or simple fetch before cleaning up
-      fetch('/api/tracker', {
+      fetch('${API_URL}/api/tracker', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -254,7 +256,7 @@ export default function App() {
         });
 
         // Try standard fetch as backup
-        fetch('/api/tracker', {
+        fetch('${API_URL}/api/tracker', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
