@@ -64,6 +64,12 @@ export default function Dashboard({
 
   const p = (n) => String(n).padStart(2, '0');
 
+  const fmtGoal = (mins) => {
+    const h = Math.floor(mins / 60);
+    const m = Math.round(mins % 60);
+    return h > 0 ? `${h}h ${m}m` : `${m}m`;
+  };
+
   const fmtClock = (ms) => {
     if (!ms) return null;
     return new Date(ms).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
@@ -89,7 +95,11 @@ export default function Dashboard({
 
   const meta = (t) => {
     if (t.running && t.lastStart) return `Started ${fmtClock(t.lastStart)} · running`;
-    if (t.lastStart && t.lastEnd) return `${fmtClock(t.lastStart)} – ${fmtClock(t.lastEnd)}`;
+    if (t.lastStart && t.lastEnd) {
+      let dur = (t.lastEnd - t.lastStart) / 1000;
+      if (dur < 0) dur += 24 * 3600;
+      return `${fmtClock(t.lastStart)} – ${fmtClock(t.lastEnd)} (${fmtS(dur)})`;
+    }
     if (t.lastStart) return `Started ${fmtClock(t.lastStart)}`;
     return 'Not started yet';
   };
@@ -461,20 +471,38 @@ export default function Dashboard({
                     ? minutesOver > 0
                       ? `+${minutesOver} min over`
                       : 'goal reached ✓'
-                    : `of ${goalMinutes} min goal`}
+                    : `of ${fmtGoal(goalMinutes)} goal`}
                 </div>
               </div>
             </div>
-            <div className="goal-row">
+            <div className="goal-row" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
               <span>Daily goal</span>
               <input
                 type="number"
-                min="1"
-                step="5"
-                value={goalMinutes}
-                onChange={(e) => handleGoalChange(e.target.value)}
+                min="0"
+                max="23"
+                value={Math.floor(goalMinutes / 60)}
+                onChange={(e) => {
+                  const h = Math.max(0, parseInt(e.target.value) || 0);
+                  const m = goalMinutes % 60;
+                  handleGoalChange(h * 60 + m);
+                }}
+                style={{ width: '42px', padding: '5px 4px', background: 'rgba(255,255,255,0.2)', border: '1.5px solid rgba(255,255,255,0.4)', borderRadius: '9px', color: '#fff', fontWeight: '800', textAlign: 'center' }}
               />
-              <span>min</span>
+              <span>h</span>
+              <input
+                type="number"
+                min="0"
+                max="59"
+                value={Math.round(goalMinutes % 60)}
+                onChange={(e) => {
+                  const h = Math.floor(goalMinutes / 60);
+                  const m = Math.max(0, Math.min(59, parseInt(e.target.value) || 0));
+                  handleGoalChange(h * 60 + m);
+                }}
+                style={{ width: '42px', padding: '5px 4px', background: 'rgba(255,255,255,0.2)', border: '1.5px solid rgba(255,255,255,0.4)', borderRadius: '9px', color: '#fff', fontWeight: '800', textAlign: 'center' }}
+              />
+              <span>m</span>
             </div>
           </div>
 
@@ -515,6 +543,12 @@ export default function Dashboard({
                   timeDisplay = `→ ${endStr}`;
                 }
 
+                let dur = 0;
+                if (t.lastStart && t.lastEnd) {
+                  dur = (t.lastEnd - t.lastStart) / 1000;
+                  if (dur < 0) dur += 24 * 3600;
+                }
+
                 return (
                   <div
                     className="plan-row"
@@ -545,18 +579,36 @@ export default function Dashboard({
                       style={{
                         textDecoration: t.completed ? 'line-through' : 'none',
                         fontWeight: t.running ? '600' : '500',
-                        color: t.completed ? 'var(--text-soft)' : 'var(--text-muted)'
+                        color: t.completed ? 'var(--text-soft)' : 'var(--text-muted)',
+                        flex: 1
                       }}
                     >
                       {t.name}
                     </div>
+                    {dur > 0 && (
+                      <div
+                        className="plan-duration"
+                        style={{
+                          fontSize: '11px',
+                          fontWeight: '700',
+                          color: 'var(--emerald)',
+                          background: 'var(--emerald-bg)',
+                          border: '1.5px solid var(--emerald-border)',
+                          padding: '2px 8px',
+                          borderRadius: '12px',
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
+                        {fmtS(dur)}
+                      </div>
+                    )}
                     {t.running && (
                       <span
                         className="live-dot on"
                         style={{
                           width: '7px',
                           height: '7px',
-                          marginLeft: 'auto',
+                          marginLeft: dur > 0 ? '0' : 'auto',
                           display: 'inline-block'
                         }}
                       ></span>
@@ -659,7 +711,35 @@ export default function Dashboard({
                         />
                       </div>
                       <div className="field">
-                        <label>Start time</label>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                          <label style={{ fontSize: '9px', fontWeight: '600' }}>Start time</label>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              const input = e.currentTarget.closest('.field').querySelector('input[type="time"]');
+                              if (input) {
+                                try {
+                                  input.showPicker();
+                                } catch (err) {
+                                  input.focus();
+                                }
+                              }
+                            }}
+                            disabled={isTopicRunning}
+                            style={{
+                              border: '1px solid var(--border)',
+                              background: 'var(--indigo-light)',
+                              color: 'var(--indigo)',
+                              fontSize: '11px',
+                              fontWeight: '600',
+                              padding: '2px 8px',
+                              borderRadius: '6px',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            Set
+                          </button>
+                        </div>
                         <input
                           type="time"
                           disabled={isTopicRunning}
@@ -668,7 +748,35 @@ export default function Dashboard({
                         />
                       </div>
                       <div className="field">
-                        <label>End time</label>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                          <label style={{ fontSize: '9px', fontWeight: '600' }}>End time</label>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              const input = e.currentTarget.closest('.field').querySelector('input[type="time"]');
+                              if (input) {
+                                try {
+                                  input.showPicker();
+                                } catch (err) {
+                                  input.focus();
+                                }
+                              }
+                            }}
+                            disabled={isTopicRunning}
+                            style={{
+                              border: '1px solid var(--border)',
+                              background: 'var(--indigo-light)',
+                              color: 'var(--indigo)',
+                              fontSize: '11px',
+                              fontWeight: '600',
+                              padding: '2px 8px',
+                              borderRadius: '6px',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            Set
+                          </button>
+                        </div>
                         <input
                           type="time"
                           disabled={isTopicRunning}

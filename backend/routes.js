@@ -42,11 +42,6 @@ router.post('/auth/register', async (req, res) => {
 
     // Create Tracker Data defaults for the new user
     const defaultTopics = [
-      { id: 't-dsa', name: 'DSA', completed: false, seconds: 0, running: false },
-      { id: 't-sql', name: 'SQL', completed: false, seconds: 0, running: false },
-      { id: 't-os', name: 'OS', completed: false, seconds: 0, running: false },
-      { id: 't-res', name: 'Research', completed: false, seconds: 0, running: false },
-      { id: 't-proj', name: 'Project', completed: false, seconds: 0, running: false },
       { id: 't-rev', name: 'Revision', completed: false, seconds: 0, running: false }
     ];
     const newTrackerData = new TrackerData({
@@ -152,11 +147,6 @@ router.get('/tracker', authMiddleware, async (req, res) => {
     // Fallback: If no tracker dataset exists (unlikely if created at registration, but safe)
     if (!tracker) {
       const defaultTopics = [
-        { id: 't-dsa', name: 'DSA', completed: false, seconds: 0, running: false },
-        { id: 't-sql', name: 'SQL', completed: false, seconds: 0, running: false },
-        { id: 't-os', name: 'OS', completed: false, seconds: 0, running: false },
-        { id: 't-res', name: 'Research', completed: false, seconds: 0, running: false },
-        { id: 't-proj', name: 'Project', completed: false, seconds: 0, running: false },
         { id: 't-rev', name: 'Revision', completed: false, seconds: 0, running: false }
       ];
       tracker = new TrackerData({

@@ -1,19 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root{
   --bg:#F0F4FF;
   --surface:#E8EEFF;
   --card:#FFFFFF;
   --card-done:#F0FDF8;
-  --border:#C7D2FE;
+  --border:#C7D2FE; /* Reverted to soft indigo-blue border */
   --border-md:#A5B4FC;
   --border-strong:#818CF8;
   --shadow:0 2px 8px rgba(79,70,229,0.08),0 1px 3px rgba(79,70,229,0.06);
   --shadow-md:0 6px 24px rgba(79,70,229,0.12),0 2px 8px rgba(79,70,229,0.08);
   --shadow-lg:0 12px 40px rgba(79,70,229,0.16),0 4px 12px rgba(79,70,229,0.1);
 
-  --text:#1E1B4B;
-  --text-muted:#4B5563;
+  --text:#1E1B4B; /* Reverted to relaxing deep navy-indigo */
+  --text-muted:#4B5563; /* Softer gray-slate */
   --text-soft:#6B7280;
 
   --indigo:#4F46E5;
@@ -51,10 +51,12 @@ html,body,#root{
   font-family:'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing:antialiased;
   font-size:14px;
+  font-weight: 400; /* Regular weight for relaxed eyes */
 }
 button, input, select, textarea {
   cursor:pointer;
   font-family:inherit;
+  font-weight: 500; /* Medium weight for inputs */
 }
 
 /* ─── AUTHENTICATION PAGE ─── */
