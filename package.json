@@ -1,0 +1,10 @@
+{
+  "name": "manitfocus-root",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "build": "npm run build --prefix frontend"
+  }
+}
