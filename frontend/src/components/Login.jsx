@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 const API_URL = import.meta.env.VITE_API_URL || "https://manitfocus.onrender.com";
-alert(`API_URL = ${API_URL}`);
-alert(API_URL);
-
 
 export default function Login({ onLoginSuccess }) {
   const [isRegistering, setIsRegistering] = useState(false);
