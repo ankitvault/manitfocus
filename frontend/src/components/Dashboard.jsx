@@ -213,7 +213,6 @@ export default function Dashboard({
       if (t.id === id && !t.running) {
         let lastStart = t.lastStart;
         let lastEnd = t.lastEnd;
-        let seconds = t.seconds;
 
         if (!v) {
           if (f === 's') lastStart = null;
@@ -225,14 +224,9 @@ export default function Dashboard({
 
           if (f === 's') lastStart = b.getTime();
           else lastEnd = b.getTime();
-
-          if (lastStart && lastEnd) {
-            const diff = (lastEnd - lastStart) / 1000;
-            if (diff > 0) seconds = diff;
-          }
         }
 
-        return { ...t, lastStart, lastEnd, seconds };
+        return { ...t, lastStart, lastEnd };
       }
       return t;
     });
@@ -710,79 +704,97 @@ export default function Dashboard({
                           onChange={(e) => setTarget(t.id, e.target.value)}
                         />
                       </div>
-                      <div className="field">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                          <label style={{ fontSize: '9px', fontWeight: '600' }}>Start time</label>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              const input = e.currentTarget.closest('.field').querySelector('input[type="time"]');
-                              if (input) {
-                                try {
-                                  input.showPicker();
-                                } catch (err) {
-                                  input.focus();
-                                }
-                              }
-                            }}
-                            disabled={isTopicRunning}
-                            style={{
-                              border: '1px solid var(--border)',
-                              background: 'var(--indigo-light)',
-                              color: 'var(--indigo)',
-                              fontSize: '11px',
-                              fontWeight: '600',
-                              padding: '2px 8px',
-                              borderRadius: '6px',
-                              cursor: 'pointer'
-                            }}
-                          >
-                            Set
-                          </button>
+                      <div className="field" style={{ 
+                        gridColumn: 'span 2',
+                        border: '2px solid #EF4444',
+                        boxShadow: '0 0 12px rgba(239, 68, 68, 0.65), inset 0 0 6px rgba(239, 68, 68, 0.3)',
+                        background: '#FEF2F2',
+                        transition: 'all 0.3s ease'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                          <label style={{ fontSize: '9px', fontWeight: '800', letterSpacing: '0.09em', textTransform: 'uppercase', color: '#B91C1C', margin: 0 }}>Start – End Time (for show)</label>
                         </div>
-                        <input
-                          type="time"
-                          disabled={isTopicRunning}
-                          value={toTV(t.lastStart)}
-                          onChange={(e) => setTime(t.id, 's', e.target.value)}
-                        />
-                      </div>
-                      <div className="field">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                          <label style={{ fontSize: '9px', fontWeight: '600' }}>End time</label>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              const input = e.currentTarget.closest('.field').querySelector('input[type="time"]');
-                              if (input) {
-                                try {
-                                  input.showPicker();
-                                } catch (err) {
-                                  input.focus();
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <input
+                              type="time"
+                              disabled={isTopicRunning}
+                              value={toTV(t.lastStart)}
+                              onChange={(e) => setTime(t.id, 's', e.target.value)}
+                              style={{ width: '100%', padding: '4px 6px', background: 'rgba(255, 255, 255, 0.85)', border: '1.5px solid #FCA5A5', borderRadius: '6px', fontSize: '13px', fontWeight: '600', color: '#991B1B' }}
+                            />
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                const input = e.currentTarget.closest('div').querySelector('input[type="time"]');
+                                if (input) {
+                                  try {
+                                    input.showPicker();
+                                  } catch (err) {
+                                    input.focus();
+                                  }
                                 }
-                              }
-                            }}
-                            disabled={isTopicRunning}
-                            style={{
-                              border: '1px solid var(--border)',
-                              background: 'var(--indigo-light)',
-                              color: 'var(--indigo)',
-                              fontSize: '11px',
-                              fontWeight: '600',
-                              padding: '2px 8px',
-                              borderRadius: '6px',
-                              cursor: 'pointer'
-                            }}
-                          >
-                            Set
-                          </button>
+                              }}
+                              disabled={isTopicRunning}
+                              style={{
+                                border: '1.5px solid #FCA5A5',
+                                background: '#FEE2E2',
+                                color: '#B91C1C',
+                                fontSize: '10px',
+                                fontWeight: '800',
+                                padding: '4px 8px',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                height: '26px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                transition: 'all 0.15s'
+                              }}
+                            >
+                              Set
+                            </button>
+                          </div>
+                          <span style={{ color: '#EF4444', fontWeight: '800', fontSize: '11px' }}>to</span>
+                          <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <input
+                              type="time"
+                              disabled={isTopicRunning}
+                              value={toTV(t.lastEnd)}
+                              onChange={(e) => setTime(t.id, 'e', e.target.value)}
+                              style={{ width: '100%', padding: '4px 6px', background: 'rgba(255, 255, 255, 0.85)', border: '1.5px solid #FCA5A5', borderRadius: '6px', fontSize: '13px', fontWeight: '600', color: '#991B1B' }}
+                            />
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                const input = e.currentTarget.closest('div').querySelector('input[type="time"]');
+                                if (input) {
+                                  try {
+                                    input.showPicker();
+                                  } catch (err) {
+                                    input.focus();
+                                  }
+                                }
+                              }}
+                              disabled={isTopicRunning}
+                              style={{
+                                border: '1.5px solid #FCA5A5',
+                                background: '#FEE2E2',
+                                color: '#B91C1C',
+                                fontSize: '10px',
+                                fontWeight: '800',
+                                padding: '4px 8px',
+                                borderRadius: '6px',
+                                cursor: 'pointer',
+                                height: '26px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                transition: 'all 0.15s'
+                              }}
+                            >
+                              Set
+                            </button>
+                          </div>
                         </div>
-                        <input
-                          type="time"
-                          disabled={isTopicRunning}
-                          value={toTV(t.lastEnd)}
-                          onChange={(e) => setTime(t.id, 'e', e.target.value)}
-                        />
                       </div>
                     </div>
 
