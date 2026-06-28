@@ -728,7 +728,7 @@ button, input, select, textarea {
   .nav-logo{font-size:17px;}
   .nav-date{font-size:10px;padding:4px 10px;}
   .sidebar{padding:16px;flex-direction:column;gap:14px;}
-  .ring-card{width:100%;}
+  .ring-card{width:100%;flex:none;}
   .ring-wrap{width:140px;height:140px;}
   .main{padding:16px 16px 0;gap:18px;}
   .topics-grid{grid-template-columns:1fr;}
