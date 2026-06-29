@@ -12,6 +12,14 @@ export default function Login({ onLoginSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address (e.g., name@gmail.com or name@nitbhopal.ac.in)');
+      return;
+    }
+
     setLoading(true);
 
     const endpoint = isRegistering ? '/api/auth/register' : '/api/auth/login';

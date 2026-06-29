@@ -21,6 +21,11 @@ router.post('/auth/register', async (req, res) => {
     return res.status(400).json({ message: 'Please enter all fields' });
   }
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ message: 'Please enter a valid email address' });
+  }
+
   try {
     // Check for existing user
     const existingUser = await User.findOne({ email });
