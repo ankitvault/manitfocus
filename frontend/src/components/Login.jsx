@@ -70,7 +70,7 @@ export default function Login({ onLoginSuccess }) {
               <label style={{ color: 'var(--indigo)' }}>Username</label>
               <input
                 type="text"
-                placeholder="Enter your name"
+                placeholder="Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -83,7 +83,7 @@ export default function Login({ onLoginSuccess }) {
             <label style={{ color: 'var(--indigo)' }}>Email Address</label>
             <input
               type="email"
-              placeholder="name@nitbhopal.ac.in"
+              placeholder="Enter Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -95,7 +95,7 @@ export default function Login({ onLoginSuccess }) {
             <label style={{ color: 'var(--indigo)' }}>Password</label>
             <input
               type="password"
-              placeholder="••••••••"
+              placeholder="Enter Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
